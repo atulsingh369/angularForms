@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataFormComponent } from './data-form.component';
+import { WeatherStatusComponent } from './weather-status.component';
 
-describe('DataFormComponent', () => {
-  let component: DataFormComponent;
-  let fixture: ComponentFixture<DataFormComponent>;
+describe('WeatherStatusComponent', () => {
+  let component: WeatherStatusComponent;
+  let fixture: ComponentFixture<WeatherStatusComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataFormComponent]
+      imports: [WeatherStatusComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DataFormComponent);
+    fixture = TestBed.createComponent(WeatherStatusComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

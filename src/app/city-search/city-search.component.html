@@ -1,0 +1,27 @@
+<form class="example-form" (ngSubmit)="onSubmit()">
+  <mat-form-field class="example-full-width">
+    <mat-label>Enter City</mat-label>
+    <input
+      type="text"
+      aria-label="City"
+      matInput
+      [formControl]="city"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      @for (option of filteredOptions | async; track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+  <div class="example-button-container">
+    <button
+      type="submit"
+      mat-fab
+      color="primary"
+      aria-label="Example icon button with a bookmark icon"
+    >
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</form>
