@@ -1,11 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +9,12 @@ import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
+import { GetWeatherDataService } from '../get-weather-data.service';
 
 @Component({
   selector: 'app-city-search',
@@ -28,6 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatDividerModule,
     ReactiveFormsModule,
     AsyncPipe,
+    HttpClientModule,
     MatButtonModule,
   ],
   templateUrl: './city-search.component.html',
@@ -36,16 +37,35 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class CitySearchComponent {
   city = new FormControl('');
   data: any;
+  load: boolean = false;
   options: string[] = ['Prayagraj', 'Lucknow', 'Varanasi'];
   filteredOptions: Observable<string[]> | undefined;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private http: HttpClient,
+    private appService: GetWeatherDataService
+  ) {}
 
   ngOnInit() {
     this.filteredOptions = this.city.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value || ''))
     );
+    try {
+      this.http
+        .get(
+          `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=Lucknow`
+        )
+        .subscribe((res: any) => {
+          this.data = res;
+          this.load = true;
+        });
+      console.log(this.data);
+      // this.appService.weatherData = this.data;
+      // this.appService.load = this.load;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   private _filter(value: string): string[] {
@@ -58,12 +78,16 @@ export class CitySearchComponent {
 
   onSubmit = async () => {
     try {
-      fetch(
-        `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=${this.city.value}`
-      )
-        .then((response) => response.json())
-        .then(console.log)
-        .then((quotesData) => (this.data = quotesData));
+      this.http
+        .get(
+          `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=${this.city.value}`
+        )
+        .subscribe((res: any) => {
+          this.data = res;
+          this.load = true;
+        });
+      // this.appService.weatherData = this.data;
+      // this.appService.load = this.load;
       console.log(this.data);
     } catch (error) {
       console.log(error);
