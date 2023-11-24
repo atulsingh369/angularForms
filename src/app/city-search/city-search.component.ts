@@ -38,7 +38,14 @@ export class CitySearchComponent {
   city = new FormControl('');
   data: any;
   load: boolean = false;
-  options: string[] = ['Prayagraj', 'Lucknow', 'Varanasi'];
+  options: string[] = [
+    'Allahbad',
+    'Lucknow',
+    'Varanasi',
+    'New Delhi',
+		'Gorakhpur',
+		'Jaipur'
+  ];
   filteredOptions: Observable<string[]> | undefined;
 
   constructor(
@@ -51,21 +58,6 @@ export class CitySearchComponent {
       startWith(''),
       map((value) => this._filter(value || ''))
     );
-    try {
-      this.http
-        .get(
-          `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=Lucknow`
-        )
-        .subscribe((res: any) => {
-          this.data = res;
-          this.load = true;
-        });
-      console.log(this.data);
-      // this.appService.weatherData = this.data;
-      // this.appService.load = this.load;
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   private _filter(value: string): string[] {
@@ -77,20 +69,6 @@ export class CitySearchComponent {
   }
 
   onSubmit = async () => {
-    try {
-      this.http
-        .get(
-          `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=${this.city.value}`
-        )
-        .subscribe((res: any) => {
-          this.data = res;
-          this.load = true;
-        });
-      // this.appService.weatherData = this.data;
-      // this.appService.load = this.load;
-      console.log(this.data);
-    } catch (error) {
-      console.log(error);
-    }
+    this.city.value && this.appService.getWeather(this.city.value);
   };
 }

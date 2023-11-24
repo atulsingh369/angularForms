@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { GetWeatherDataService } from '../get-weather-data.service';
 
 @Component({
@@ -10,36 +9,21 @@ import { GetWeatherDataService } from '../get-weather-data.service';
   templateUrl: './weather-status.component.html',
   styleUrl: './weather-status.component.scss',
 })
-export class WeatherStatusComponent {
+export class WeatherStatusComponent implements OnInit {
   weatherData: any;
 
-  constructor(
-    private http: HttpClient,
-    private appService: GetWeatherDataService
-  ) {}
+  constructor(private appService: GetWeatherDataService) {}
 
   ngOnInit() {
-    try {
-      this.http
-        .get(
-          `https://api.weatherapi.com/v1/current.json?key=0196414b3b9144f9a26200354230103&q=Lucknow`
-        )
-        .subscribe((res: any) => (this.weatherData = res));
-      console.log(this.weatherData);
-    } catch (error) {
-      console.log(error);
-    }
+    this.getWeather();
   }
 
   ngOnChange() {
-    // if (this.appService.load) {
-    //   this.weatherData = this.appService.weatherData;
-    // } else this.weatherData = 'No Data';
-
-    console.log(this.weatherData);
+    this.getWeather();
+    console.log(this.weatherData.location?.name);
   }
 
-  getHeroes(): void {
-    this.weatherData = this.appService.getHeroes();
+  getWeather(): void {
+    this.weatherData = this.appService.getWeather(null);
   }
 }
